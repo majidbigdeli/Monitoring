@@ -1,0 +1,23 @@
+﻿
+@{ Layout = null; }
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    @RenderBody()
+
+
+    <script src="~/js/jquery/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

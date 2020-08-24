@@ -1,0 +1,82 @@
+﻿@model Monitoring.Web.ViewModel.DepartmentViewModel
+@{ ViewData["Title"] = "Index";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+
+<iframe id="iframe1" class="marquee" frameborder="none" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;">
+    Your browser doesn't support iframes
+</iframe>
+
+
+
+
+@section Scripts {
+
+    <script>
+
+        var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DepartmentDashbords))
+
+        var i = 0;
+        var j = model.length;
+
+
+
+        const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+
+            const blob = new Blob(byteArrays, { type: contentType });
+            return blob;
+        }
+
+
+        (function step() {
+
+            if (i < j) {
+                $('.marquee').hide(1000);
+
+                var data_url = model[i].Url;
+
+                if (model[i].RenderMode == 2) {
+                    const contentType = 'image/png';
+                    const b64Data = model[i].Url;
+
+                    const blob = b64toBlob(b64Data, contentType);
+                    data_url = URL.createObjectURL(blob);
+                }
+
+                console.log(data_url);
+
+                $('.marquee').attr('src', data_url);
+                i = i + 1;
+                if (i == j) {
+                    i = 0;
+                }
+                setTimeout(step, parseInt(model[i].WaitTime) * 1000);
+            }
+        })();
+
+        $('.marquee').on('load', function () {
+            $('.marquee').show(1000).hide().fadeIn();
+        });
+
+        //image/png
+
+    </script>
+
+
+
+}
+
